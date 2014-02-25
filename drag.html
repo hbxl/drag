@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			*{
+				border:0;
+				margin:0;
+				padding:0;
+			}
+			#box{
+				width:90%;
+				height:90%;
+				border:1px solid red;
+				position:absolute;
+			}
+			#drag{
+				width:140px; 
+				height:140px; 
+				background-color:blue; 
+				cursor:move;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div style="" id="drag">
+				
+			</div>
+		</div>
+		<script>
+			var myDiv = document.getElementById('drag');
+			var box = document.getElementById('box');
+			//函数惰性载入
+			var bindEvent = function(ele, event, fun) {
+				if(ele.addEventListener) {
+					bindEvent = function(ele, event, fun) {
+						ele.addEventListener(event, fun, false);
+					};
+				}else if(ele.attachEvent) {
+					bindEvent = function(ele, event, fun) {
+						ele.attachEvent('on' + event, fun);
+					};
+				} else {
+					bindEvent= null;
+				}
+				bindEvent(ele, event, fun);
+			};
+			var unbindEvent = function(ele, event, fun) {
+				if(ele.removeEventListener) {
+					unbindEvent = function(ele, event, fun) {
+						ele.removeEventListener(event, fun);
+					};
+				}else if(ele.detachEvent) {
+					unbindEvent = function(ele, event, fun) {
+						ele.detachEvent('on' + event, fun);
+					};
+				}
+				unbindEvent(ele, event, fun);
+			};
+			var down = function(e){
+				e = e || window.event; 
+				myDiv.startX = e.clientX-myDiv.offsetLeft; 
+				myDiv.startY = e.clientY-myDiv.offsetTop; 
+				bindEvent(document, 'mousemove', move);
+				bindEvent(document, 'mouseup', up);
+			};
+			var move = function(e){
+				var po = myDiv.getBoundingClientRect();
+				e = e || window.event;
+				myDiv.style.position = "absolute"; 
+				myDiv.style.left = e.clientX - myDiv.startX+"px"; 
+				myDiv.style.top = e.clientY - myDiv.startY+"px";
+		      	if(parseInt(myDiv.style.left) < 0) {
+			      	myDiv.style.left = 0;
+		      	}
+		      	if(parseInt(myDiv.style.top) < 0) {
+			      	myDiv.style.top = 0;
+		      	}
+		      	if(parseInt(myDiv.style.left) > box.clientWidth-myDiv.clientWidth) {
+			      	myDiv.style.left = (box.clientWidth - myDiv.clientWidth) + "px";
+		      	}
+		      	if(parseInt(myDiv.style.top) > box.clientHeight-myDiv.clientHeight) {
+		         	myDiv.style.top = (box.clientHeight - myDiv.clientHeight) + "px";
+		      	}
+			};
+			var up = function(e){ 
+				unbindEvent(document, 'mousemove', move); 
+			};
+			bindEvent(myDiv, 'mousedown', down); 
+		</script> 
+	</body>
+</html>
