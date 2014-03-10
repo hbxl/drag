@@ -41,7 +41,7 @@
 						ele.attachEvent('on' + event, fun);
 					};
 				} else {
-					bindEvent= null;
+					return;
 				}
 				bindEvent(ele, event, fun);
 			};
@@ -54,6 +54,8 @@
 					unbindEvent = function(ele, event, fun) {
 						ele.detachEvent('on' + event, fun);
 					};
+				} else {
+					return;
 				}
 				unbindEvent(ele, event, fun);
 			};
